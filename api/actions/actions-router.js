@@ -46,7 +46,8 @@ router.put('/:id', validateActionID, validateUpdateAction, async (req, res) => {
 
         const action = {
             notes: req.body.notes,
-            description: req.body.description
+            description: req.body.description,
+            completed: req.body.completed
         };
 
         const updatedAction = await actionsModel.update(id, action);
