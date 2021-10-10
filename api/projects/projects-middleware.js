@@ -4,26 +4,34 @@ const projectsModel = require('../projects/projects-model');
 async function validateProjectID(req, res, next) {
     const id = req.params.id;
     const project = await projectsModel.get(id);
-    if(!project) {
-        res.status(404).json({
-            message: 'project not found'
-        });
+    if(!project || (project == null || undefined)) {
+        res.status(404).send();
     }
     req.project = project;
     next();
 }
 
-const validateProject = async (req, res, next) => {
+async function validateUpdateProject(req, res, next) {
     const body = req.body;
-    if(!body.name || !body.description) {
-        res.status(400).json({
-            message: 'missing required fields'
-        });
+    if(!body.name || !body.description ||
+        (body.name === null || undefined) || (body.description === null || undefined) ||
+        (body.completed === null || undefined)) {
+        res.status(400).send();
+    }
+    next();
+}
+
+async function validateProject(req, res, next) {
+    const body = req.body;
+    if(!body.name || !body.description || (body.name === null || undefined) || 
+       (body.description === null || undefined)) {
+        res.status(400).send();
     }
     next();
 }
 
 module.exports = {
    validateProject,
-   validateProjectID 
+   validateUpdateProject,
+   validateProjectID, 
 };
